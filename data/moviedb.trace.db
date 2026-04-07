@@ -1,0 +1,3 @@
+2026-04-08 03:15:20.208607+05:30 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "MOVIES" not found; SQL statement:
+SELECT * FROM MOVIES [42102-224]
