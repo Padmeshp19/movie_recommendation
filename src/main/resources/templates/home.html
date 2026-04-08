@@ -1,7 +1,83 @@
 <!DOCTYPE html>
-<html>
-<body style="background:black; color:white;">
-    <h1>Welcome to Movie App 🎬</h1>
-    <p>Module 2 coming next...</p>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Movie App</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba")
+no-repeat center center/cover;
+color:white;
+}
+
+nav{
+background:black;
+padding:15px;
+display:flex;
+justify-content:space-between;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin:10px;
+font-weight:bold;
+}
+
+.hero{
+height:80vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+background:rgba(0,0,0,0.6);
+}
+
+.hero h1{
+font-size:60px;
+}
+
+.hero button{
+padding:15px 30px;
+font-size:18px;
+background:red;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<nav>
+
+<div>🎬 MovieApp</div>
+
+<div>
+
+<a href="/">Home</a>
+<a href="/movies">Browse Movies</a>
+<a href="/login">Login</a>
+
+</div>
+
+</nav>
+
+<div class="hero">
+
+<h1>Discover Your Next Favorite Movie</h1>
+
+<a href="/movies">
+<button>Explore Movies</button>
+</a>
+
+</div>
+
 </body>
 </html>
