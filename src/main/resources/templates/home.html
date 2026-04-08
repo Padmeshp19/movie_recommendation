@@ -2,81 +2,95 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Movie App</title>
-
 <style>
-
-body{
-margin:0;
-font-family:Arial;
-background:url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba")
-no-repeat center center/cover;
-color:white;
+body {
+    margin: 0;
+    font-family: Arial;
+    background: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba") no-repeat center center/cover;
+    color: white;
 }
-
-nav{
-background:black;
-padding:15px;
-display:flex;
-justify-content:space-between;
+nav {
+    background: black;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
-
-nav a{
-color:white;
-text-decoration:none;
-margin:10px;
-font-weight:bold;
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    font-weight: bold;
 }
-
-.hero{
-height:80vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-background:rgba(0,0,0,0.6);
+nav a:hover {
+    color: red;
 }
-
-.hero h1{
-font-size:60px;
+.hero {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.6);
 }
-
-.hero button{
-padding:15px 30px;
-font-size:18px;
-background:red;
-color:white;
-border:none;
-cursor:pointer;
+.hero h1 {
+    font-size: 60px;
+    margin-bottom: 10px;
 }
-
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+    color: #ccc;
+}
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+}
+.btn-primary {
+    padding: 15px 30px;
+    font-size: 18px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.btn-secondary {
+    padding: 15px 30px;
+    font-size: 18px;
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+}
+.btn-secondary:hover {
+    background: white;
+    color: black;
+}
 </style>
-
 </head>
-
 <body>
 
 <nav>
-
-<div>🎬 MovieApp</div>
-
-<div>
-
-<a href="/">Home</a>
-<a href="/movies">Browse Movies</a>
-<a href="/login">Login</a>
-
-</div>
-
+    <div>🎬 MovieApp</div>
+    <div>
+        <a href="/">Home</a>
+        <a href="/movies">Browse Movies</a>
+        <a href="/movies/1/recommendations">🔥 Recommendations</a>
+        <a href="/login">Login</a>
+    </div>
 </nav>
 
 <div class="hero">
-
-<h1>Discover Your Next Favorite Movie</h1>
-
-<a href="/movies">
-<button>Explore Movies</button>
-</a>
-
+    <h1>Discover Your Next Favorite Movie</h1>
+    <p>Smart recommendations powered by what you love</p>
+    <div class="hero-buttons">
+        <a href="/movies" class="btn-primary">Explore Movies</a>
+        <a href="/movies/1/recommendations" class="btn-secondary">Get Recommendations</a>
+    </div>
 </div>
 
 </body>

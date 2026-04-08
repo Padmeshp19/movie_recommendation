@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Recommendations</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    background: url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba") no-repeat center center/cover;
+    color: white;
+    min-height: 100vh;
+}
+nav {
+    background: black;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    font-weight: bold;
+}
+nav a:hover {
+    color: red;
+}
+.page-wrapper {
+    min-height: 90vh;
+    background: rgba(0,0,0,0.75);
+    padding: 50px 80px;
+    box-sizing: border-box;
+}
+.page-header {
+    margin-bottom: 40px;
+}
+.page-header h2 {
+    font-size: 16px;
+    color: red;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 0 0 10px 0;
+}
+.page-header h1 {
+    font-size: 42px;
+    margin: 0;
+}
+.page-header span {
+    color: red;
+}
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 40px;
+}
+.movie-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    padding: 24px 20px;
+    transition: transform 0.2s, background 0.2s;
+}
+.movie-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.13);
+}
+.movie-card .genre-badge {
+    display: inline-block;
+    background: red;
+    color: white;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.movie-card h3 {
+    font-size: 20px;
+    margin: 0 0 8px 0;
+}
+.movie-card .meta {
+    font-size: 13px;
+    color: #aaa;
+    margin: 4px 0;
+}
+.movie-card .rating {
+    margin-top: 12px;
+    font-size: 14px;
+    color: gold;
+    font-weight: bold;
+}
+.movie-card .actions {
+    margin-top: 16px;
+    display: flex;
+    gap: 8px;
+}
+.btn-small {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+}
+.btn-red {
+    background: red;
+    color: white;
+}
+.btn-outline {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+.btn-outline:hover {
+    background: white;
+    color: black;
+}
+.empty-state {
+    text-align: center;
+    padding: 80px 0;
+    color: #aaa;
+}
+.empty-state h3 {
+    font-size: 24px;
+    color: white;
+}
+.back-link {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 14px;
+}
+.back-link:hover {
+    color: white;
+}
+</style>
+</head>
+<body>
+
+<nav>
+    <div>🎬 MovieApp</div>
+    <div>
+        <a href="/">Home</a>
+        <a href="/movies">Browse Movies</a>
+        <a href="/movies/1/recommendations">🔥 Recommendations</a>
+        <a href="/login">Login</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    <a href="/movies" class="back-link">← Back to Movies</a>
+
+    <div class="page-header">
+        <h2>Hybrid Engine</h2>
+        <h1>Because you liked <span th:text="${seed.title}">Movie Title</span></h1>
+    </div>
+
+    <!-- Movie cards grid -->
+    <div class="cards-grid" th:if="${recommendations != null and !recommendations.isEmpty()}">
+        <div class="movie-card" th:each="movie : ${recommendations}">
+            <div class="genre-badge" th:text="${movie.genre}">Genre</div>
+            <h3 th:text="${movie.title}">Movie Title</h3>
+            <p class="meta" th:text="'Language: ' + ${movie.language}">Language</p>
+            <p class="rating" th:text="'★ ' + ${movie.rating}">★ 8.5</p>
+            <div class="actions">
+                <a th:href="@{/movies/{id}/recommendations(id=${movie.id})}" class="btn-small btn-red">Recommend</a>
+                <a th:href="@{/ratings/add/{id}(id=${movie.id})}" class="btn-small btn-outline">Rate</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" th:if="${recommendations == null or recommendations.isEmpty()}">
+        <h3>No recommendations found</h3>
+        <p>Try adding more movies with similar genres to get better results.</p>
+        <a href="/movies/new" class="btn-small btn-red" style="display:inline-block; padding: 12px 24px;">+ Add Movies</a>
+    </div>
+
+</div>
+
+</body>
+</html>
