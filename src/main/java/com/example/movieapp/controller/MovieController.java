@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.movieapp.model.Movie;
 import com.example.movieapp.model.User;
@@ -17,6 +16,11 @@ import com.example.movieapp.service.impl.UserBasedRecommendationEngine;
 
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -35,6 +39,32 @@ public class MovieController {
     }
 
     // -----------------------------------------------------------------------
+    // Helper: scan static/posters/ and return list of filenames
+    // -----------------------------------------------------------------------
+    private List<String> getPosterFiles() {
+        List<String> posters = new ArrayList<>();
+        try {
+            PathMatchingResourcePatternResolver resolver =
+                    new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath:static/posters/*");
+            for (Resource r : resources) {
+                String filename = r.getFilename();
+                if (filename != null && (
+                        filename.toLowerCase().endsWith(".jpg") ||
+                        filename.toLowerCase().endsWith(".jpeg") ||
+                        filename.toLowerCase().endsWith(".png") ||
+                        filename.toLowerCase().endsWith(".webp"))) {
+                    posters.add(filename);
+                }
+            }
+            Collections.sort(posters);
+        } catch (Exception e) {
+            // No posters folder yet — return empty list
+        }
+        return posters;
+    }
+
+    // -----------------------------------------------------------------------
     // Movies CRUD
     // -----------------------------------------------------------------------
 
@@ -47,6 +77,7 @@ public class MovieController {
     @GetMapping("/movies/new")
     public String showCreateForm(Model model) {
         model.addAttribute("movie", new Movie());
+        model.addAttribute("posters", getPosterFiles());
         return "add-movie";
     }
 
@@ -59,6 +90,7 @@ public class MovieController {
     @GetMapping("/movies/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("movie", movieService.getMovieById(id));
+        model.addAttribute("posters", getPosterFiles());
         return "edit-movie";
     }
 
@@ -76,18 +108,17 @@ public class MovieController {
     }
 
     // -----------------------------------------------------------------------
-    // User-based recommendations (logged-in user's rated genres)
+    // User-based recommendations
     // -----------------------------------------------------------------------
 
-        @GetMapping("/recommendations")
-        public String userRecommendations(HttpSession session, Model model) {
+    @GetMapping("/recommendations")
+    public String userRecommendations(HttpSession session, Model model) {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
             return "recommendations";
         }
 
-        // DEBUG - print to console
         System.out.println("=== USER ID: " + user.getId());
         String favGenre = userBasedEngine.getFavouriteGenre(user);
         System.out.println("=== FAV GENRE: " + favGenre);
@@ -101,7 +132,7 @@ public class MovieController {
     }
 
     // -----------------------------------------------------------------------
-    // Seed-based recommendations (click Recommend on a movie card)
+    // Seed-based recommendations
     // -----------------------------------------------------------------------
 
     @GetMapping("/recommendations/{id}")
@@ -113,7 +144,6 @@ public class MovieController {
         return "recommendations";
     }
 
-    // Keep old route working too
     @GetMapping("/movies/{id}/recommendations")
     public String legacyRecommendations(@PathVariable Long id, Model model) {
         return seedRecommendations(id, model);

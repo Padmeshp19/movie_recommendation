@@ -2,119 +2,50 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Edit Movie</title>
-
 <style>
 body{
-margin:0;
-font-family:Arial;
+margin:0; font-family:Arial;
 background:url("https://images.unsplash.com/photo-1489599849927-2ee91cede3ba")
 no-repeat center center/cover;
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+min-height:100vh; display:flex; justify-content:center; align-items:center;
 }
-
 .container{
-background:rgba(0,0,0,0.85);
-padding:40px;
-border-radius:12px;
-color:white;
-width:420px;
-box-shadow:0px 0px 20px black;
+background:rgba(0,0,0,0.85); padding:40px; border-radius:12px;
+color:white; width:420px; box-shadow:0px 0px 20px black;
 }
-
-h2{
-text-align:center;
-margin-bottom:25px;
-}
-
-label{
-font-size:12px;
-color:#aaa;
-margin-top:10px;
-display:block;
-}
-
+h2{ text-align:center; margin-bottom:25px; }
+label{ font-size:12px; color:#aaa; margin-top:10px; display:block; }
 input, select{
-width:100%;
-padding:12px;
-margin:5px 0 10px 0;
-border:1px solid #333;
-border-radius:5px;
-background:#1a1a1a;
-color:white;
-box-sizing:border-box;
+width:100%; padding:12px; margin:5px 0 10px 0;
+border:1px solid #333; border-radius:5px;
+background:#1a1a1a; color:white; box-sizing:border-box;
 }
-
-input:focus, select:focus{
-outline:none;
-border-color:red;
-}
-
+input:focus, select:focus{ outline:none; border-color:red; }
+select option{ background:#1a1a1a; }
 .poster-preview{
-width:100%;
-height:180px;
-object-fit:cover;
-border-radius:5px;
-margin-bottom:10px;
-border:1px solid #333;
-display:none;
+width:100%; height:200px; object-fit:cover;
+border-radius:5px; margin-bottom:10px;
+border:1px solid #333; display:block;
 }
-
 .no-poster{
-width:100%;
-height:100px;
-background:#1a0000;
-border:1px dashed #550000;
-border-radius:5px;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#555;
-font-size:12px;
-margin-bottom:10px;
+width:100%; height:120px; background:#1a0000;
+border:1px dashed #550000; border-radius:5px;
+display:flex; align-items:center; justify-content:center;
+color:#555; font-size:12px; margin-bottom:10px;
 }
-
-.poster-hint{
-font-size:11px;
-color:#666;
-margin-top:-5px;
-margin-bottom:10px;
-}
-
+.poster-hint{ font-size:11px; color:#666; margin-bottom:10px; }
 button{
-width:100%;
-padding:12px;
-margin-top:10px;
-border:none;
-background:red;
-color:white;
-font-size:16px;
-cursor:pointer;
-border-radius:5px;
+width:100%; padding:12px; margin-top:10px; border:none;
+background:red; color:white; font-size:16px; cursor:pointer; border-radius:5px;
 }
-
 button:hover{ background:darkred; }
-
-.back{
-display:block;
-text-align:center;
-margin-top:15px;
-color:white;
-text-decoration:none;
-font-size:14px;
-}
-
+.back{ display:block; text-align:center; margin-top:15px; color:white; text-decoration:none; font-size:14px; }
 .back:hover{ color:red; }
 </style>
 </head>
-
 <body>
 <div class="container">
-
-  <h2>✏️ Edit Movie</h2>
-
+  <h2>&#9998; Edit Movie</h2>
   <form th:action="@{/movies/update/{id}(id=${movie.id})}" method="post">
 
     <label>Movie Title</label>
@@ -126,30 +57,29 @@ font-size:14px;
     <label>Language</label>
     <input type="text" name="language" th:value="${movie.language}" required>
 
-    <label>Rating (0–10)</label>
-    <input type="number" step="0.1" min="0" max="10"
-           name="rating" th:value="${movie.rating}" required>
+    <label>Rating (0-10)</label>
+    <input type="number" step="0.1" min="0" max="10" name="rating" th:value="${movie.rating}" required>
 
-    <label>Select Poster</label>
+    <label>Poster</label>
 
-    <!-- PREVIEW IMAGE -->
+    <!-- Show current poster if exists -->
     <img id="posterPreview"
          class="poster-preview"
          th:if="${movie.posterUrl != null and movie.posterUrl != ''}"
          th:src="@{'/posters/' + ${movie.posterUrl}}"
-         style="display:block;" />
+         th:alt="${movie.title}" />
 
-    <!-- NO POSTER -->
-    <div id="noPoster"
-         class="no-poster"
+    <!-- No poster placeholder -->
+    <div id="noPoster" class="no-poster"
          th:if="${movie.posterUrl == null or movie.posterUrl == ''}">
       No poster yet
     </div>
 
-    <!-- DROPDOWN -->
-    <select name="posterUrl" id="posterSelect">
-      <option value="">-- Choose Poster --</option>
+    <p class="poster-hint">Choose a poster from your static/posters/ folder:</p>
 
+    <!-- Dropdown of available poster files -->
+    <select name="posterUrl" id="posterSelect">
+      <option value="">-- No Poster --</option>
       <option th:each="p : ${posters}"
               th:value="${p}"
               th:text="${p}"
@@ -157,46 +87,35 @@ font-size:14px;
       </option>
     </select>
 
-    <p class="poster-hint">
-      Select an image from static/posters/
-    </p>
-
     <button type="submit">Update Movie</button>
-
   </form>
-
-  <a href="/movies" class="back">← Back to Movies</a>
-
+  <a href="/movies" class="back">&#8592; Back to Movies</a>
 </div>
 
 <script>
 const select = document.getElementById("posterSelect");
-const preview = document.getElementById("posterPreview");
-const noPoster = document.getElementById("noPoster");
 
-function fixExtension(name) {
-    if (!name) return "";
-    // auto add .jpg if missing
-    if (!name.includes(".")) {
-        return name + ".jpg";
-    }
-    return name;
-}
+// Live preview when dropdown changes
+select.addEventListener("change", function() {
+    const val = this.value;
+    let preview = document.getElementById("posterPreview");
+    const noPoster = document.getElementById("noPoster");
 
-select.addEventListener("change", function () {
-    let selected = fixExtension(this.value);
-
-    if (selected) {
-        preview.src = "/posters/" + selected;
+    if (val) {
+        if (!preview) {
+            preview = document.createElement("img");
+            preview.id = "posterPreview";
+            preview.className = "poster-preview";
+            select.parentNode.insertBefore(preview, select);
+        }
+        preview.src = "/posters/" + val;
         preview.style.display = "block";
-
         if (noPoster) noPoster.style.display = "none";
     } else {
-        preview.style.display = "none";
+        if (preview) preview.style.display = "none";
         if (noPoster) noPoster.style.display = "flex";
     }
 });
 </script>
-
 </body>
 </html>

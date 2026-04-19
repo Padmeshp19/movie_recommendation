@@ -34,7 +34,6 @@ public class MovieServiceImpl implements MovieService {
 
     @Override
     public Movie updateMovie(Long id, Movie movie) {
-
         Movie existingMovie = movieRepository.findById(id).orElse(null);
 
         if (existingMovie != null) {
@@ -42,7 +41,7 @@ public class MovieServiceImpl implements MovieService {
             existingMovie.setGenre(movie.getGenre());
             existingMovie.setLanguage(movie.getLanguage());
             existingMovie.setRating(movie.getRating());
-
+            existingMovie.setPosterUrl(movie.getPosterUrl()); // ← was missing
             return movieRepository.save(existingMovie);
         }
 
