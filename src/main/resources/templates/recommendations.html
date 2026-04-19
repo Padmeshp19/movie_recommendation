@@ -12,7 +12,7 @@ body {
 }
 nav {
     background: black;
-    padding: 15px;
+    padding: 15px 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -20,35 +20,55 @@ nav {
 nav a {
     color: white;
     text-decoration: none;
-    margin: 10px;
+    margin: 0 10px;
     font-weight: bold;
 }
-nav a:hover {
-    color: red;
+nav a:hover { color: red; }
+.nav-left { font-size: 20px; font-weight: bold; }
+.nav-right { display: flex; align-items: center; gap: 6px; }
+.user-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: red; display: flex; align-items: center;
+    justify-content: center; font-weight: bold; font-size: 14px; color: white;
 }
+.user-name { font-size: 14px; color: #ccc; }
+.user-name span { color: white; font-weight: bold; }
+.btn-logout {
+    margin-left: 10px; padding: 6px 14px;
+    background: transparent; border: 1px solid #555;
+    color: #aaa; border-radius: 4px; font-size: 13px; text-decoration: none;
+}
+.btn-logout:hover { border-color: red; color: red; }
+.btn-login {
+    padding: 8px 18px; background: red; color: white;
+    border-radius: 4px; text-decoration: none; font-size: 14px; font-weight: bold;
+}
+.btn-login:hover { background: #cc0000; }
 .page-wrapper {
     min-height: 90vh;
     background: rgba(0,0,0,0.75);
     padding: 50px 80px;
     box-sizing: border-box;
 }
-.page-header {
-    margin-bottom: 40px;
+.back-link {
+    display: inline-block;
+    margin-bottom: 30px;
+    color: #aaa;
+    text-decoration: none;
+    font-size: 14px;
 }
+.back-link:hover { color: white; }
+.page-header { margin-bottom: 40px; }
 .page-header h2 {
-    font-size: 16px;
+    font-size: 14px;
     color: red;
     text-transform: uppercase;
     letter-spacing: 2px;
     margin: 0 0 10px 0;
 }
-.page-header h1 {
-    font-size: 42px;
-    margin: 0;
-}
-.page-header span {
-    color: red;
-}
+.page-header h1 { font-size: 42px; margin: 0; }
+.page-header span { color: red; }
+.page-header p { color: #aaa; font-size: 14px; margin-top: 10px; }
 .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -66,7 +86,7 @@ nav a:hover {
     transform: translateY(-5px);
     background: rgba(255,255,255,0.13);
 }
-.movie-card .genre-badge {
+.genre-badge {
     display: inline-block;
     background: red;
     color: white;
@@ -77,109 +97,100 @@ nav a:hover {
     text-transform: uppercase;
     letter-spacing: 1px;
 }
-.movie-card h3 {
-    font-size: 20px;
-    margin: 0 0 8px 0;
-}
-.movie-card .meta {
-    font-size: 13px;
-    color: #aaa;
-    margin: 4px 0;
-}
-.movie-card .rating {
-    margin-top: 12px;
-    font-size: 14px;
-    color: gold;
-    font-weight: bold;
-}
-.movie-card .actions {
-    margin-top: 16px;
-    display: flex;
-    gap: 8px;
-}
-.btn-small {
-    padding: 8px 14px;
+.movie-card h3 { font-size: 20px; margin: 0 0 8px 0; }
+.meta { font-size: 13px; color: #aaa; margin: 4px 0; }
+.rating { margin-top: 12px; font-size: 14px; color: gold; font-weight: bold; }
+.actions { margin-top: 16px; }
+.btn-red {
+    padding: 8px 16px;
     font-size: 13px;
     border-radius: 4px;
     text-decoration: none;
     cursor: pointer;
     border: none;
-}
-.btn-red {
     background: red;
     color: white;
+    display: inline-block;
 }
-.btn-outline {
-    background: transparent;
-    color: white;
-    border: 1px solid white;
-}
-.btn-outline:hover {
-    background: white;
-    color: black;
-}
+.btn-red:hover { background: #cc0000; }
 .empty-state {
     text-align: center;
     padding: 80px 0;
     color: #aaa;
 }
-.empty-state h3 {
-    font-size: 24px;
-    color: white;
+.empty-state h3 { font-size: 24px; color: white; margin-bottom: 12px; }
+.login-prompt {
+    text-align: center;
+    padding: 80px 0;
 }
-.back-link {
-    display: inline-block;
-    margin-bottom: 30px;
-    color: #aaa;
-    text-decoration: none;
-    font-size: 14px;
-}
-.back-link:hover {
-    color: white;
-}
+.login-prompt h3 { font-size: 28px; margin-bottom: 12px; }
+.login-prompt p { color: #aaa; margin-bottom: 24px; }
 </style>
 </head>
 <body>
 
 <nav>
-    <div>🎬 MovieApp</div>
-    <div>
-        <a href="/">Home</a>
-        <a href="/movies">Browse Movies</a>
-        <a href="/movies/1/recommendations">🔥 Recommendations</a>
-        <a href="/login">Login</a>
+  <div class="nav-left">&#127909; MovieApp</div>
+  <div class="nav-right">
+    <a href="/">Home</a>
+    <a href="/movies">Browse Movies</a>
+    <a href="/recommendations">&#128293; Recommendations</a>
+
+    <div th:if="${session.loggedInUser != null}" style="display:flex;align-items:center;gap:10px;">
+      <div class="user-avatar"
+           th:text="${#strings.toUpperCase(#strings.substring(session.loggedInUser.name,0,1))}">U</div>
+      <span class="user-name">Hello, <span th:text="${session.loggedInUser.name}">User</span></span>
+      <a href="/logout" class="btn-logout">Logout</a>
     </div>
+    <div th:if="${session.loggedInUser == null}">
+      <a href="/register" style="margin-right:10px;color:#ccc;font-size:14px;">Register</a>
+      <a href="/login" class="btn-login">Login</a>
+    </div>
+  </div>
 </nav>
 
 <div class="page-wrapper">
 
-    <a href="/movies" class="back-link">← Back to Movies</a>
+  <a href="/movies" class="back-link">&#8592; Back to Movies</a>
+
+  <!-- NOT LOGGED IN -->
+  <div class="login-prompt" th:if="${session.loggedInUser == null}">
+    <h3>Login to see your recommendations</h3>
+    <p>Rate movies on the Browse page, then we'll recommend more you'll love.</p>
+    <a href="/login" class="btn-red" style="padding:12px 28px;font-size:15px;">Login</a>
+  </div>
+
+  <!-- LOGGED IN -->
+  <div th:if="${session.loggedInUser != null}">
 
     <div class="page-header">
-        <h2>Hybrid Engine</h2>
-        <h1>Because you liked <span th:text="${seed.title}">Movie Title</span></h1>
+      <h2>&#128293; Based on your ratings</h2>
+      <h1>Recommended for <span th:text="${session.loggedInUser.name}">You</span></h1>
+      <p th:if="${favGenre != null}">
+        You love <strong th:text="${favGenre}">Genre</strong> movies — here are the best ones you haven't seen yet.
+      </p>
     </div>
 
-    <!-- Movie cards grid -->
+    <!-- Has recommendations -->
     <div class="cards-grid" th:if="${recommendations != null and !recommendations.isEmpty()}">
-        <div class="movie-card" th:each="movie : ${recommendations}">
-            <div class="genre-badge" th:text="${movie.genre}">Genre</div>
-            <h3 th:text="${movie.title}">Movie Title</h3>
-            <p class="meta" th:text="'Language: ' + ${movie.language}">Language</p>
-            <p class="rating" th:text="'★ ' + ${movie.rating}">★ 8.5</p>
-            <div class="actions">
-                <a th:href="@{/movies/{id}/recommendations(id=${movie.id})}" class="btn-small btn-red">Recommend</a>
-                <a th:href="@{/ratings/add/{id}(id=${movie.id})}" class="btn-small btn-outline">Rate</a>
-            </div>
+      <div class="movie-card" th:each="movie : ${recommendations}">
+        <div class="genre-badge" th:text="${movie.genre}">Genre</div>
+        <h3 th:text="${movie.title}">Title</h3>
+        <p class="meta" th:text="'Language: ' + ${movie.language}">Language</p>
+        <p class="rating" th:text="'&#9733; ' + ${movie.rating}">8.5</p>
+        <div class="actions">
+          <a th:href="@{/recommendations/{id}(id=${movie.id})}" class="btn-red">Recommend</a>
         </div>
+      </div>
     </div>
 
-    <!-- Empty state -->
+    <!-- No recommendations yet -->
     <div class="empty-state" th:if="${recommendations == null or recommendations.isEmpty()}">
-        <h3>No recommendations found</h3>
-        <p>Try adding more movies with similar genres to get better results.</p>
-        <a href="/movies/new" class="btn-small btn-red" style="display:inline-block; padding: 12px 24px;">+ Add Movies</a>
+      <h3>No recommendations yet</h3>
+      <p>Go to <a href="/movies" style="color:red;">Browse Movies</a>, rate some movies, and come back here!</p>
     </div>
+
+  </div>
 
 </div>
 

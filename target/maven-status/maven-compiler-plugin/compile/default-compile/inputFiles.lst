@@ -12,6 +12,7 @@ D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movi
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\MovieappApplication.java
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\model\Rating.java
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\controller\MovieController.java
+D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\service\UserBasedRecommendationEngine.java
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\service\impl\ContentBasedEngine.java
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\service\RatingService.java
 D:\movie_recommendation_OOAD\movie_recommendation\src\main\java\com\example\movieapp\controller\AuthController.java

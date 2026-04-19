@@ -1,102 +1,267 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Movies</title>
-
+<title>Browse Movies</title>
 <style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-body{
-font-family:Arial;
-background:#111;
-color:white;
-margin:0;
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: white;
+  min-height: 100vh;
 }
 
-header{
-background:black;
-padding:15px;
-text-align:center;
-font-size:28px;
+nav {
+  background: black;
+  padding: 15px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-gap:20px;
-padding:20px;
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 10px;
+  font-weight: bold;
 }
 
-.card{
-background:#1c1c1c;
-padding:15px;
-border-radius:10px;
-box-shadow:0px 0px 10px black;
+nav a:hover { color: red; }
+.nav-left { font-size: 20px; font-weight: bold; }
+.nav-right { display: flex; align-items: center; gap: 6px; }
+
+.page-header {
+  background: linear-gradient(to bottom, #1a0000, #111);
+  padding: 30px 25px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #cc0000;
 }
 
-.card h3{
-margin-top:0;
+.page-header h2 {
+  font-size: 26px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-button{
-padding:8px 15px;
-border:none;
-background:red;
-color:white;
-cursor:pointer;
+.page-header h2 span {
+  color: red;
 }
 
-a{
-color:white;
-text-decoration:none;
+.add-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
 }
 
-.add-btn{
-margin:20px;
-display:block;
-text-align:center;
+.add-btn:hover { background: #cc0000; }
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 24px;
 }
 
+.card {
+  background: #1c1c1c;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid #2a2a2a;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: red;
+}
+
+.poster-wrap {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  background: #0a0a0a;
+  overflow: hidden;
+}
+
+.poster-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.poster-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1a0000, #2d0000);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: rgba(255,255,255,0.25);
+  font-size: 12px;
+}
+
+.genre-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: red;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-body { padding: 12px; }
+
+.card-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-lang {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.rating-star { color: #f59e0b; font-size: 13px; }
+.rating-val  { color: #f59e0b; font-size: 13px; font-weight: bold; }
+
+.card-actions { display: flex; gap: 5px; }
+
+.btn {
+  flex: 1;
+  padding: 6px 0;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  border: none;
+}
+
+.btn-edit {
+  background: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #3a3a3a;
+}
+.btn-edit:hover { background: #3a3a3a; color: white; }
+
+.btn-delete {
+  background: transparent;
+  color: red;
+  border: 1px solid #550000;
+}
+.btn-delete:hover { background: #200000; }
+
+.btn-rate {
+  background: transparent;
+  color: #f59e0b;
+  border: 1px solid #5a3a00;
+}
+.btn-rate:hover { background: #1a1000; }
+
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 80px 20px;
+  color: #555;
+  font-size: 16px;
+}
+
+.empty a { color: red; text-decoration: none; }
 </style>
-
 </head>
-
 <body>
 
-<header>
+<nav>
+  <div class="nav-left">&#127909; MovieApp</div>
+  <div class="nav-right">
+    <a href="/">Home</a>
+    <a href="/movies">Browse Movies</a>
+    <a href="/recommendations">&#128293; Recommendations</a>
+  </div>
+</nav>
 
-🎬 Movie Catalog
-
-</header>
-
-<a class="add-btn" href="/movies/new">
-
-<button>Add Movie</button>
-
-</a>
+<div class="page-header">
+  <h2>&#127909; Browse <span>Movies</span></h2>
+  <a href="/movies/new" class="add-btn">+ Add Movie</a>
+</div>
 
 <div class="container">
 
-<div class="card" th:each="movie : ${movies}">
+  <div class="empty" th:if="${#lists.isEmpty(movies)}">
+    No movies yet. <a href="/movies/new">Add the first one!</a>
+  </div>
 
-<h3 th:text="${movie.title}"></h3>
+  <div class="card" th:each="movie : ${movies}">
 
-<p>Genre: <span th:text="${movie.genre}"></span></p>
+    <div class="poster-wrap">
+      <img th:if="${movie.posterUrl != null and movie.posterUrl != ''}"
+           th:src="@{'/posters/' + ${movie.posterUrl}}"
+           th:alt="${movie.title}" />
 
-<p>Language: <span th:text="${movie.language}"></span></p>
+      <div class="poster-placeholder"
+           th:if="${movie.posterUrl == null or movie.posterUrl == ''}">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="rgba(255,255,255,0.15)">
+          <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/>
+        </svg>
+        No poster
+      </div>
 
-<p>Rating: ⭐ <span th:text="${movie.rating}"></span></p>
+      <span class="genre-badge" th:text="${movie.genre}"></span>
+    </div>
 
-<a th:href="@{/movies/edit/{id}(id=${movie.id})}">
-<button>Edit</button>
-</a>
+    <div class="card-body">
+      <div class="card-title" th:text="${movie.title}"></div>
+      <div class="card-lang" th:text="${movie.language}"></div>
 
-<a th:href="@{/movies/delete/{id}(id=${movie.id})}">
-<button>Delete</button>
-</a>
+      <div class="rating">
+        <span class="rating-star">&#9733;</span>
+        <span class="rating-val" th:text="${movie.rating}"></span>
+      </div>
 
-<!-- ⭐ NEW RATE BUTTON -->
-<a th:href="@{/ratings/add/{id}(id=${movie.id})}">
-<button>Rate</button>
-</a>
+      <div class="card-actions">
+        <a class="btn btn-edit"   th:href="@{/movies/edit/{id}(id=${movie.id})}">Edit</a>
+        <a class="btn btn-delete" th:href="@{/movies/delete/{id}(id=${movie.id})}">Delete</a>
+        <a class="btn btn-rate"   th:href="@{/ratings/add/{id}(id=${movie.id})}">Rate</a>
+      </div>
+    </div>
+
+  </div>
 
 </div>
+
+</body>
+</html>
